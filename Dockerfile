@@ -2,6 +2,7 @@ FROM ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV TERM=xterm-256color
+ENV PORT=8080
 
 RUN apt-get update && apt-get install -y \
     nginx \
@@ -14,14 +15,10 @@ RUN apt-get update && apt-get install -y \
     nano \
     vim \
     htop \
-    btop \
     tmux \
     screen \
     zip \
     unzip \
-    tar \
-    gzip \
-    p7zip-full \
     net-tools \
     iproute2 \
     iputils-ping \
@@ -35,15 +32,13 @@ RUN apt-get update && apt-get install -y \
     openssh-client \
     ca-certificates \
     build-essential \
-    software-properties-common \
-    cron \
-    sudo \
     sqlite3 \
+    sudo \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY . /app
+COPY . .
 
 RUN mkdir -p \
     /app/data \
@@ -51,27 +46,18 @@ RUN mkdir -p \
     /app/logs \
     /app/backups
 
-RUN chmod -R 777 /app/data \
-    && chmod -R 777 /app/uploads \
-    && chmod -R 777 /app/logs \
-    && chmod -R 777 /app/backups
+RUN python3 -m venv /venv
+
+RUN /venv/bin/pip install --upgrade pip
 
 RUN if [ -f requirements.txt ]; then \
-    pip3 install --break-system-packages -r requirements.txt; \
+    /venv/bin/pip install -r requirements.txt; \
+    else \
+    /venv/bin/pip install flask psutil gunicorn; \
     fi
 
-RUN echo 'events {} \
-http { \
-server { \
-listen 8080; \
-location / { \
-proxy_pass http://127.0.0.1:5000; \
-proxy_set_header Host $host; \
-proxy_set_header X-Real-IP $remote_addr; \
-} \
-} \
-}' > /etc/nginx/nginx.conf
+RUN printf 'events {}\nhttp {\nserver {\nlisten 8080;\nlocation / {\nproxy_pass http://127.0.0.1:5000;\nproxy_set_header Host $host;\nproxy_set_header X-Real-IP $remote_addr;\n}\n}\n}\n' > /etc/nginx/nginx.conf
 
 EXPOSE 8080
 
-CMD bash -c "nginx && python3 app.py"
+CMD bash -c "nginx && /venv/bin/python app.py"
