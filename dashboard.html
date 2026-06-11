@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Painel</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<h1>🚀 Dashboard</h1>
+
+<div class="grid">
+    <div class="card">
+        <h2>CPU</h2>
+        <span id="cpu">0%</span>
+    </div>
+
+    <div class="card">
+        <h2>RAM</h2>
+        <span id="ram">0%</span>
+    </div>
+
+    <div class="card">
+        <h2>Disco</h2>
+        <span id="disk">0%</span>
+    </div>
+
+    <div class="card">
+        <h2>Hora</h2>
+        <span id="time"></span>
+    </div>
+</div>
+
+<canvas id="chart"></canvas>
+
+<h2>Arquivos</h2>
+<ul id="files"></ul>
+
+<script src="/static/dashboard.js"></script>
+</body>
+</html>
