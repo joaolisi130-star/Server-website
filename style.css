@@ -1,0 +1,30 @@
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Arial,sans-serif;
+    margin:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+.card{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    transition:.3s;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+canvas{
+    margin-top:20px;
+    background:#1e293b;
+    border-radius:12px;
+    padding:10px;
+}
